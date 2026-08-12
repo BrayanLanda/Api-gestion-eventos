@@ -1,11 +1,14 @@
 package org.gestion.eventos.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.gestion.eventos.api.domain.Event;
 import org.gestion.eventos.api.dto.EventRequestDto;
 import org.gestion.eventos.api.dto.EventResponseDto;
 import org.gestion.eventos.api.mapper.EventMapper;
 import org.gestion.eventos.api.service.IEventService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,9 +27,10 @@ public class EventController {
     }
 
     @PostMapping
-    public EventResponseDto createEvent(@RequestBody EventRequestDto requestDto){
+    public ResponseEntity<EventResponseDto> createEvent(@Valid @RequestBody EventRequestDto requestDto){
         Event eventToSaved = eventMapper.toEntity(requestDto);
         Event eventSaved = eventService.save(eventToSaved);
-        return eventMapper.toResponseDto(eventSaved);
+        EventResponseDto responseDto = eventMapper.toResponseDto(eventSaved);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 }
