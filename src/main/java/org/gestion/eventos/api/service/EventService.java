@@ -16,4 +16,9 @@ public class EventService implements IEventService{
     public List<Event> findAll() {
         return repository.findAll();
     }
+
+    @Override
+    public Event save(Event event) {
+        return repository.save(event);
+    }
 }
