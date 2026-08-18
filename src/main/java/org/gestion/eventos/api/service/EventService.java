@@ -33,6 +33,7 @@ public class EventService implements IEventService{
 
     @Override
     public void deleteById(Long id) {
-
+        Event eventToDelete = this.findById(id);
+        repository.delete(eventToDelete);
     }
 }
