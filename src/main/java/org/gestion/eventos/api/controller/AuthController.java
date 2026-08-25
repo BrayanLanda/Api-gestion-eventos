@@ -1,7 +1,9 @@
 package org.gestion.eventos.api.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.gestion.eventos.api.dto.JwtAuthResponseDto;
 import org.gestion.eventos.api.dto.LoginDto;
+import org.gestion.eventos.api.security.jwt.JwtGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,14 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
+    private final JwtGenerator jwtGenerator;
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<JwtAuthResponseDto> authenticateUser(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User successfully authenticated", HttpStatus.OK);
+        String token = jwtGenerator.generateToken(authentication);
+        return new ResponseEntity<>(new JwtAuthResponseDto(token), HttpStatus.OK);
     }
 }
