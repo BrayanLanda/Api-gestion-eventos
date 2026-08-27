@@ -9,6 +9,7 @@ import org.gestion.eventos.api.mapper.EventMapper;
 import org.gestion.eventos.api.service.IEventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,15 @@ public class EventController {
     private final EventMapper eventMapper;
 
     @GetMapping
-    public List<EventResponseDto> getAllEvents(){
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<List<EventResponseDto>> getAllEvents(){
         List<Event> events = eventService.findAll();
-        return eventMapper.toEventResponseDtoList(events);
+        List<EventResponseDto> responseDto = eventMapper.toEventResponseDtoList(events);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<EventResponseDto> createEvent(@Valid @RequestBody EventRequestDto requestDto){
         Event eventToSaved = eventMapper.toEntity(requestDto);
         Event eventSaved = eventService.save(eventToSaved);
@@ -35,6 +39,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<EventResponseDto> getEventById(@PathVariable Long id){
         Event event = eventService.findById(id);
         EventResponseDto responseDto = eventMapper.toResponseDto(event);
@@ -42,6 +47,7 @@ public class EventController {
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<EventResponseDto> updateEvent(@PathVariable Long id, @Valid @RequestBody EventRequestDto requestDto){
         Event eventToUpdate = eventService.findById(id);
         eventMapper.updateEventFromDto(requestDto, eventToUpdate);
@@ -50,6 +56,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id){
         eventService.deleteById(id);
         return ResponseEntity.noContent().build();
