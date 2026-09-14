@@ -1,4 +1,4 @@
-package org.gestion.eventos.api.service;
+package org.gestion.eventos.api.security.service;
 
 import lombok.RequiredArgsConstructor;
 import org.gestion.eventos.api.domain.Role;

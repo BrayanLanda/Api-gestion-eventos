@@ -1,4 +1,4 @@
-package org.gestion.eventos.api.dto;
+package org.gestion.eventos.api.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

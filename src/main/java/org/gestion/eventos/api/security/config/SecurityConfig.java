@@ -1,13 +1,11 @@
-package org.gestion.eventos.api.security;
+package org.gestion.eventos.api.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.gestion.eventos.api.security.jwt.JwtAuthEntryPoint;
 import org.gestion.eventos.api.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

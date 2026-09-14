@@ -1,16 +1,13 @@
-package org.gestion.eventos.api.controller;
+package org.gestion.eventos.api.security.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.gestion.eventos.api.domain.Role;
 import org.gestion.eventos.api.domain.User;
-import org.gestion.eventos.api.dto.JwtAuthResponseDto;
-import org.gestion.eventos.api.dto.LoginDto;
-import org.gestion.eventos.api.dto.RegisterDto;
+import org.gestion.eventos.api.security.dto.JwtAuthResponseDto;
+import org.gestion.eventos.api.security.dto.LoginDto;
+import org.gestion.eventos.api.security.dto.RegisterDto;
 import org.gestion.eventos.api.mapper.UserMapper;
-import org.gestion.eventos.api.repository.RoleRepository;
 import org.gestion.eventos.api.repository.UserRepository;
 import org.gestion.eventos.api.security.jwt.JwtGenerator;
-import org.hibernate.mapping.Collection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -32,7 +27,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
@@ -57,10 +51,7 @@ public class AuthController {
         }
         User user = userMapper.registerDtoToUser(registerDto);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        Role roles = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() ->
-                    new RuntimeException("Error, Role is not exists"));
-        user.setRoles(Collections.singleton(roles));
+
         userRepository.save(user);
         return new ResponseEntity<>("Registered user", HttpStatus.CREATED);
     }
